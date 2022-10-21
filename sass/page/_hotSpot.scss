@@ -1,0 +1,33 @@
+.index{
+    width: 1200px;
+    margin: 0 auto;
+    header{
+        display: flex;
+        justify-content: space-between;
+    }
+        ul{
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            li{
+                width: 200px;
+                font-size: 24px;
+                a{
+                    text-decoration: none;
+                    color: #333;
+                    &:after{
+                        content: "";
+                        display: block;
+                        width: 0%;
+                        height: 1.8px;
+                        background-color: tomato;
+                        bottom: -0.05em;
+                        transition: width .4s ease-in;
+                    }
+                }
+                a:hover a:after{
+                    width: 48%;
+                }
+            }
+        }
+}

@@ -1,0 +1,29 @@
+{
+  "name": "travel_tpe",
+  "version": "1.0.0",
+  "description": "\"# travel_TPE\"",
+  "main": "index.js",
+  "scripts": {
+    "開發": "gulp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/XUEHONGTANG/travel_TPE.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/XUEHONGTANG/travel_TPE/issues"
+  },
+  "homepage": "https://github.com/XUEHONGTANG/travel_TPE#readme",
+  "devDependencies": {
+    "browser-sync": "^2.27.10",
+    "gulp": "^4.0.2",
+    "gulp-clean": "^0.4.0",
+    "gulp-file-include": "^2.3.0",
+    "gulp-sass": "^5.1.0",
+    "gulp-sourcemaps": "^3.0.0",
+    "node-sass": "^7.0.3",
+    "sass": "^1.55.0"
+  }
+}

@@ -1,0 +1,13 @@
+// reset css
+@import "base/reset";
+
+//header
+@import "layout/header";
+
+//footer
+@import "layout/footer.scss";
+
+//page
+@import "page/hotSpot.scss";
+@import "page/myFavorite.scss";
+
