@@ -7,29 +7,86 @@
     <title>TPE_HotSpot</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="https://unpkg.com/vue@2"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
     <div id="app" class="index">
         <header>
-            <img src="./images/logo.png" alt="logo">
+            <img class="logo" src="./images/logo.png" alt="logo">
             <ul>
                 <li><a href="#">遊憩景點</a></li>
-                <li><a href="#">熱門美食</a></li>
+                <li><a href="#">我的最愛</a></li>
                 <li><a href="#">活動資訊</a></li>
                 <li><a href="#">玩樂台北</a></li>
             </ul>
         </header>
+        <div class="list_top_bg">
+            <h1>資料列表</h1>
+        </div>
+        
+        <div class="list" v-if="list">
+            <div class="detail" v-for="(val, i) in filter">
+                    <img class="introPic" :src="val.images[0].src" alt="">
+                <h1 class="title">{{val.name}}</h1>
+                <p class="introTitle">基本介紹</p>
+                <p class="intro">{{val.introduction}}</p>
+            </div>
+        </div>
+            <ul class="pages">
+                <li class="previous">
+                    <i class="fa-solid fa-circle-chevron-left" @click="left()"></i>
+                </li>
+                <li v-for=" page in pages" @click="toPage(page)" :class="{currentPage:currentPage === (page)}">{{page}}</li>
+                <li class="next">
+                    <i class="fa-solid fa-circle-chevron-right" @click="right()"></i>
+                </li>
+            </ul>
     </div>
+
+
     <script>
-        new Vue = ({
+        new Vue({
             el: "#app",
             data: {
-
+                list: null,
+                pages: 0,
+                currentPage: 1,
             },
-            mounted(){
-
+            methods:{
+                toPage(i){
+                    // console.log(i);
+                    this.currentPage = i;
+                },
+                left(){
+                //控制頁碼往前一頁 寫個判斷式讓頁碼不會小於0
+                    this.currentPage--;
+                    if(this.currentPage <=0){
+                        this.currentPage=1
+                    };
+                },
+                right(){
+                    this.currentPage++;
+                    if(this.currentPage >= this.pages){
+                        this.currentPage = this.pages
+                    };
+                },
+            },
+            computed:{
+                filter(){
+                    let updateList = [];
+                    updateList = this.list.data.slice((this.currentPage - 1)*6, (this.currentPage-1)*6+6)
+                    return updateList;
+                }
+            },
+            mounted() {
+                fetch('./travel_taipei.json')
+                .then(resp => resp.json())
+                .then(resp => {
+                    this.list = resp
+                    this.pages = Math.ceil(this.list.data.length / 6);
+                })
             }
-        })
+        });
     </script>
 </body>
 </html>
