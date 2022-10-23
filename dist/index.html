@@ -20,12 +20,21 @@
                 <li><a href="#">玩樂台北</a></li>
             </ul>
         </header>
-        <div class="list_top_bg">
+        <div class="list_top_bg" v-if="list">
             <h1>資料列表</h1>
         </div>
-        
-        <div class="list" v-if="list">
-            <div class="detail" v-for="(val, i) in filter">
+        <h1 class="title">{{itemTitle}}</h1>
+        <ul class="filter"> 
+            <li class="chooseDetail" @click="show">請選擇分類
+                <i class="fa-solid fa-chevron-down" :class="changeAngle"></i>
+                <ol v-show="isShow">
+                    <li class="filterDetail" @click="allItem('全部列表')" >全部列表</li>
+                    <li class="filterDetail" v-for="i in filterCategory" @click="filterItem(i)">{{i}}</li>
+                </ol>
+            </li>
+        </ul>
+        <div class="list">
+            <div class="detail" v-for="(val, i) in updateList">
                     <img class="introPic" :src="val.images[0].src" alt="">
                 <h1 class="title">{{val.name}}</h1>
                 <p class="introTitle">基本介紹</p>
@@ -51,31 +60,72 @@
                 list: null,
                 pages: 0,
                 currentPage: 1,
+                isShow: false,
+                changeAngle: {
+                    'up': false
+                },
+                updateList: null,
+                itemTitle: "全部列表",
             },
             methods:{
+                allItem(all){
+                    this.updateList = this.list.data.slice((this.currentPage - 1)*6, this.currentPage * 6)
+                    this.pages = Math.ceil(this.list.data.length / 6);
+                    this.currentPage = 1;
+                    this.itemTitle = all;
+                },
+                filterItem(item){
+                    // console.log(item);
+                    this.updateList = this.list.data.filter((items) => {
+                        return items.category[0].name == item
+                    })
+                    this.pages = Math.ceil(this.updateList.length / 6);
+                    this.currentPage = 1;
+                    this.itemTitle = item;
+                },
+                show(){
+                    if(this.isShow == false && this.changeAngle.up == false){
+                        this.isShow = true
+                        this.changeAngle.up = true
+                    }else if(this.isShow == true && this.changeAngle.up == true){
+                        this.isShow = false
+                        this.changeAngle.up = false
+                    }
+                },
                 toPage(i){
                     // console.log(i);
                     this.currentPage = i;
+                    this.reloading();
                 },
                 left(){
-                //控制頁碼往前一頁 寫個判斷式讓頁碼不會小於0
                     this.currentPage--;
-                    if(this.currentPage <=0){
+                    if(this.currentPage <= 0){
                         this.currentPage=1
                     };
+                    this.reloading();
                 },
                 right(){
                     this.currentPage++;
                     if(this.currentPage >= this.pages){
                         this.currentPage = this.pages
                     };
+                    this.reloading();
                 },
+                reloading(){
+                    this.updateList = this.list.data.slice((this.currentPage - 1)*6, this.currentPage * 6)
+                }
             },
             computed:{
-                filter(){
-                    let updateList = [];
-                    updateList = this.list.data.slice((this.currentPage - 1)*6, (this.currentPage-1)*6+6)
-                    return updateList;
+                filterCategory(){
+                    let updateCategory = [];
+                    for(let i = 0; i < this.list.data.length; i++){
+                        let name = this.list.data[i].category[0].name
+                        updateCategory.push(name)
+                    }
+                    let result = updateCategory.filter(function(element, index, arr){
+                        return arr.indexOf(element) === index;
+                    });
+                    return result;
                 }
             },
             mounted() {
@@ -84,6 +134,7 @@
                 .then(resp => {
                     this.list = resp
                     this.pages = Math.ceil(this.list.data.length / 6);
+                    this.updateList = this.list.data.slice((this.currentPage - 1)*6, this.currentPage * 6)
                 })
             }
         });

@@ -39,6 +39,45 @@
             color: white;
         }
     }
+    .title{
+        text-align: center;
+        font-size: 32px;
+        margin: 24px 0;
+    }
+
+    .filter{
+        width: 200px;
+        margin-left: 366px;
+        font-size: 24px;
+        text-align: center;
+        margin-top: 16px;
+        .chooseDetail{
+            line-height: 50px;
+            background-color: white;
+            cursor: pointer;
+            box-shadow: 0 0 3px;
+            border-radius: 10px 10px 0 0;
+            .fa-chevron-down{
+                margin-left: 8px;
+            }
+            .up{
+                transform: rotate(180deg);
+            }
+            ol{
+                width: 200px;
+                position: absolute;
+                .filterDetail{
+                    line-height: 50px;
+                    background-color: white;
+                    cursor: pointer;
+                    box-shadow: 0 0 3px;
+                    &:last-child{
+                        border-radius: 0 0 10px 10px;
+                    }
+                }
+            }
+        }
+    }
 
     .list{
         width: 1200px;
@@ -47,10 +86,11 @@
             display: inline-block;
             width: 330px;
             margin: 32px 16px;
-            border: 2px solid #666;
             border-radius: 3%;
             overflow: hidden;
             padding: 16px;
+            background-color: white;
+            box-shadow: 0 0 3px;
 
             .introPic{
                 width: 330px;
