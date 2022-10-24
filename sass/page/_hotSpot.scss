@@ -9,6 +9,15 @@
         .logo{
             width: 6%;
         }
+        .favoriteTotal{
+            background-color: tomato;
+            color: white;
+            width: 24px;
+            line-height: 24px;
+            border-radius: 50%;
+            position: absolute;
+            top: 24px;
+        }
         ul{
             display: flex;
             justify-content: center;
@@ -105,17 +114,47 @@
                 margin-top: 16px;
             }
 
-            .introTitle{
-                font-size: 24px;
-                font-weight: bold;
-                margin-top: 16px;
+            .intro{
+                width: 345px;
+                margin-top: 8px;
             }
 
-            .intro{
+            .fa-location-dot{
+                margin-right: 8px;
+            }
+
+            .fa-phone{
+                margin-right: 8px;
+            }
+
+            .introTitle{
+                text-align: center;
+                font-size: 24px;
+                font-weight: bold;
+                margin: 16px 0 8px;
+            }
+
+            .introDetail{
                 width: 350px;
-                height: 200px;
+                height: 120px;
                 overflow-y: scroll;
-                margin-top: 8px;
+            }
+
+            .add{
+                background-color: #5695D2;
+                color: #fff;
+                border: none;
+                padding: 8px 32px;
+                border-radius: 25px;
+                font-size: 16px;
+                font-weight: 700;
+                text-align: center;
+                transition: all 0.3s ease;
+                cursor: pointer;
+                margin-top: 16px;
+                &:hover{
+                    background-color: rgb(238, 69, 69);
+                }
             }
         }
     }

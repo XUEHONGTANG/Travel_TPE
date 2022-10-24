@@ -4,11 +4,61 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>TPE_HotSpot</title>
     <link rel="stylesheet" href="css/style.css">
     <script src="https://unpkg.com/vue@2"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 </head>
 <body>
-    <h1>1234</h1>
+    <div id="app" class="index">
+        <header>
+            <img class="logo" src="./images/logo.png" alt="logo">
+            <ul>
+                <li><a href="./index.html">遊憩景點</a></li>
+                <li><a href="./myFavorite.html">我的最愛</a><span class="favoriteTotal">{{infoDataLength}}</span></li>
+                <li><a href="#">活動資訊</a></li>
+                <li><a href="#">玩樂台北</a></li>
+            </ul>
+        </header>
+        <div class="list_top_bg">
+            <h1>我的最愛</h1>
+        </div>
+        <h1 class="title">{{itemTitle}}</h1>
+        <div class="list">
+            <div class="detail" v-for="(val, i) in updateList">
+                    <img class="introPic" :src="val.images[0].src" alt="">
+                <h1 class="title">{{val.name}}</h1>
+                <p class="intro"><i class="fa-solid fa-location-dot"></i>{{val.address}}</p>
+                <p class="intro"><i class="fa-solid fa-phone"></i>{{val.tel}}</p>
+                <button class="add">編輯</button>
+            </div>
+        </div>
+            <ul class="pages">
+                <li class="previous">
+                    <i class="fa-solid fa-circle-chevron-left" @click="left()"></i>
+                </li>
+                <li v-for=" page in pages" @click="toPage(page)" :class="{currentPage:currentPage === (page)}">{{page}}</li>
+                <li class="next">
+                    <i class="fa-solid fa-circle-chevron-right" @click="right()"></i>
+                </li>
+            </ul>
+    </div>
+
+
+    <script>
+        new Vue({
+            el: "#app",
+            data: {
+                infoData:[],
+                infoDataLength: null,
+            },
+            mounted(){
+                let infoDataTotal = localStorage.getItem('data')
+                this.infoData = JSON.parse(infoDataTotal)
+
+            }
+
+        });
+    </script>
 </body>
 </html>

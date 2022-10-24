@@ -15,7 +15,7 @@
             <img class="logo" src="./images/logo.png" alt="logo">
             <ul>
                 <li><a href="#">遊憩景點</a></li>
-                <li><a href="#">我的最愛</a></li>
+                <li><a href="./myFavorite.html">我的最愛</a><span class="favoriteTotal">{{infoDataLength}}</span></li>
                 <li><a href="#">活動資訊</a></li>
                 <li><a href="#">玩樂台北</a></li>
             </ul>
@@ -37,8 +37,11 @@
             <div class="detail" v-for="(val, i) in updateList">
                     <img class="introPic" :src="val.images[0].src" alt="">
                 <h1 class="title">{{val.name}}</h1>
-                <p class="introTitle">基本介紹</p>
-                <p class="intro">{{val.introduction}}</p>
+                <p class="intro"><i class="fa-solid fa-location-dot"></i>{{val.address}}</p>
+                <p class="intro"><i class="fa-solid fa-phone"></i>{{val.tel}}</p>
+                <h1 class="introTitle">基本介紹</h1>
+                <p class="introDetail">{{val.introduction}}</p>
+                <button class="add" @click="add(val.images[0].src, val.name, val.address, val.tel, val.introduction)">加入最愛</button>
             </div>
         </div>
             <ul class="pages">
@@ -58,16 +61,33 @@
             el: "#app",
             data: {
                 list: null,
+                listType: null,
+                updateList: [],
                 pages: 0,
                 currentPage: 1,
                 isShow: false,
                 changeAngle: {
                     'up': false
                 },
-                updateList: null,
                 itemTitle: "全部列表",
+                infoDataTotal: [],
+                infoDataLength: null,
             },
             methods:{
+                add(pic, name, address, tel, intro){
+                    // console.log(pic, name, address, tel, intro);
+                    let infoData = {
+                        "pic": pic,
+                        "name": name,
+                        "address": address,
+                        "tel": tel,
+                        "intro": intro,
+                    };
+                    this.infoDataTotal.push(infoData)
+                    this.infoDataTotal = [...new Set(this.infoDataTotal.map(item => JSON.stringify(item)))].map(item => JSON.parse(item));
+                    localStorage.setItem('data', JSON.stringify(this.infoDataTotal))
+                    this.infoDataLength = this.infoDataTotal.length
+                },
                 allItem(all){
                     this.updateList = this.list.data.slice((this.currentPage - 1)*6, this.currentPage * 6)
                     this.pages = Math.ceil(this.list.data.length / 6);
@@ -77,11 +97,12 @@
                 filterItem(item){
                     // console.log(item);
                     this.updateList = this.list.data.filter((items) => {
-                        return items.category[0].name == item
+                        return items.category[0].name === item
                     })
                     this.pages = Math.ceil(this.updateList.length / 6);
                     this.currentPage = 1;
                     this.itemTitle = item;
+
                 },
                 show(){
                     if(this.isShow == false && this.changeAngle.up == false){
