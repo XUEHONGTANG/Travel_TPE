@@ -11,39 +11,41 @@
 </head>
 <body>
     <div id="app" class="index">
-        <header>
-            <img class="logo" src="./images/logo.png" alt="logo">
-            <ul>
-                <li><a href="#">遊憩景點</a></li>
-                <li><a href="./myFavorite.html">我的最愛</a><span class="favoriteTotal">{{infoDataLength}}</span></li>
-                <li><a href="#">活動資訊</a></li>
-                <li><a href="#">玩樂台北</a></li>
-            </ul>
-        </header>
-        <div class="list_top_bg" v-if="list">
-            <h1>資料列表</h1>
-        </div>
-        <h1 class="title">{{itemTitle}}</h1>
-        <ul class="filter"> 
-            <li class="chooseDetail" @click="show">請選擇分類
-                <i class="fa-solid fa-chevron-down" :class="changeAngle"></i>
-                <ol v-show="isShow">
-                    <li class="filterDetail" @click="findAll('全部列表')">全部列表</li>
-                    <li class="filterDetail" v-for="item in filterCategory" @click="filterItem(item)">{{item}}</li>
-                </ol>
-            </li>
-        </ul>
-        <div class="list">
-            <div class="detail" v-for="(val, i) in filterList">
-                    <img class="introPic" :src="val.images[0].src" alt="">
-                <h1 class="title">{{val.name}}</h1>
-                <p class="intro"><i class="fa-solid fa-location-dot"></i>{{val.address}}</p>
-                <p class="intro"><i class="fa-solid fa-phone"></i>{{val.tel}}</p>
-                <h1 class="introTitle">基本介紹</h1>
-                <p class="introDetail">{{val.introduction}}</p>
-                <button class="add" @click="add(val.id, val.images[0].src, val.name, val.address, val.tel, val.introduction)">加入最愛</button>
+        <div v-if="list">
+            <header>
+                <a class="logoLink" href="./index.html"><img class="logo" src="./images/logo.png" alt="logo"></a> 
+                <div class="ham" @click="showUl"><i class="fa-solid fa-bars"></i></div>
+                <ul :class="dropDownMenu">
+                    <li><a href="./index.html">遊憩景點</a></li>
+                    <li><a href="./myFavorite.html">我的最愛</a><span class="favoriteTotal">{{infoDataLength}}</span></li>
+                    <li><a href="#">活動資訊</a></li>
+                    <li><a href="#">玩樂台北</a></li>
+                </ul>
+            </header>
+            <div class="list_top_bg">
+                <h1>資料列表</h1>
             </div>
-        </div>
+            <h1 class="title">{{itemTitle}}</h1>
+            <ul class="filter"> 
+                <li class="chooseDetail" @click="show">請選擇分類
+                    <i class="fa-solid fa-chevron-down" :class="changeAngle"></i>
+                    <ol v-show="isShow">
+                        <li class="filterDetail" @click="findAll('全部列表')">全部列表</li>
+                        <li class="filterDetail" v-for="item in filterCategory" @click="filterItem(item)">{{item}}</li>
+                    </ol>
+                </li>
+            </ul>
+            <div class="list">
+                <div class="detail" v-for="(val, i) in filterList">
+                        <img class="introPic" :src="val.images[0].src" alt="">
+                    <h1 class="title">{{val.name}}</h1>
+                    <p class="intro"><i class="fa-solid fa-location-dot"></i>{{val.address}}</p>
+                    <p class="intro"><i class="fa-solid fa-phone"></i>{{val.tel}}</p>
+                    <h1 class="introTitle">基本介紹</h1>
+                    <p class="introDetail">{{val.introduction}}</p>
+                    <button class="add" @click="add(val.id, val.images[0].src, val.name, val.address, val.tel, val.introduction)">加入最愛</button>
+                </div>
+            </div>
             <ul class="pages">
                 <li class="previous">
                     <i class="fa-solid fa-circle-chevron-left" @click="left()"></i>
@@ -53,6 +55,7 @@
                     <i class="fa-solid fa-circle-chevron-right" @click="right()"></i>
                 </li>
             </ul>
+        </div>
     </div>
 
 
@@ -67,6 +70,9 @@
                 isShow: false,
                 changeAngle: {
                     'up': false
+                },
+                dropDownMenu:{
+                    ulShow: false
                 },
                 itemTitle: "全部列表",
                 infoDataTotal: [],
@@ -88,13 +94,16 @@
                         "intro": intro,
                     };
 
-                    
-                    this.infoDataTotal.push(infoData)
-                    this.infoDataTotal.forEach((element, i)=>{
-                        if(infoData.id != element.id)
-                        console.log(element);
-                    })
-                    
+                    let  itemInArr = this.infoDataTotal.find(item => {
+                        return item.id === infoData.id;
+                    });
+
+                    if (itemInArr) {
+                        return false;
+                    } else {
+                        this.infoDataTotal.push(infoData)
+                    }
+
                     localStorage.setItem('data', JSON.stringify(this.infoDataTotal))
                     this.infoDataLength = this.infoDataTotal.length
                 },
@@ -133,6 +142,13 @@
                         this.currentPage = this.pages
                     };
                 },
+                showUl(){
+                    if(this.dropDownMenu.ulShow == false){
+                        this.dropDownMenu.ulShow = true
+                    }else{
+                        this.dropDownMenu.ulShow = false
+                    }
+                }
             },
             computed:{
                 filterList(){
@@ -161,12 +177,21 @@
                 }
             },
             mounted() {
+                let data = localStorage.getItem('data')
+                if(data != null){
+                    this.infoDataTotal = JSON.parse(data)
+                    this.infoDataLength = this.infoDataTotal.length
+                }else{
+                    this.infoDataLength = null
+                }
+
                 fetch('./travel_taipei.json')
                 .then(resp => resp.json())
                 .then(resp => {
                     this.list = resp
                     this.pages = Math.ceil(this.list.data.length / 6);
-                })
+                });
+
             }
         });
     </script>

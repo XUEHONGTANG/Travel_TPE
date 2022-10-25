@@ -12,8 +12,9 @@
 <body>
     <div id="app" class="index">
         <header>
-            <img class="logo" src="./images/logo.png" alt="logo">
-            <ul>
+            <a class="logoLink" href="./index.html"><img class="logo" src="./images/logo.png" alt="logo"></a>
+            <div class="ham" @click="showUl"><i class="fa-solid fa-bars"></i></div>
+            <ul :class="dropDownMenu">
                 <li><a href="./index.html">遊憩景點</a></li>
                 <li><a href="./myFavorite.html">我的最愛</a><span class="favoriteTotal">{{infoDataLength}}</span></li>
                 <li><a href="#">活動資訊</a></li>
@@ -69,6 +70,9 @@
                 tel: "",
                 intro: "",
                 isShow: false,
+                dropDownMenu:{
+                    ulShow: false
+                },
             },
             methods: {
                 edit(id, name, address, tel, intro){
@@ -107,6 +111,35 @@
                     });
                     localStorage.setItem('data',JSON.stringify(this.infoData))
                     alert("已從最愛列表移除!")
+                    
+                    let data = localStorage.getItem('data')
+                    if(typeof(data) == 'string'){
+                        localStorage.removeItem('data')
+                    }
+                    this.infoDataLength = this.infoData.length
+                },
+                toPage(i){
+                    // console.log(i);
+                    this.currentPage = i;
+                },
+                left(){
+                    this.currentPage--;
+                    if(this.currentPage <= 0){
+                        this.currentPage=1
+                    };
+                },
+                right(){
+                    this.currentPage++;
+                    if(this.currentPage >= this.pages){
+                        this.currentPage = this.pages
+                    };
+                },
+                showUl(){
+                    if(this.dropDownMenu.ulShow == false){
+                        this.dropDownMenu.ulShow = true
+                    }else{
+                        this.dropDownMenu.ulShow = false
+                    }
                 }
             },
             computed: {
@@ -118,6 +151,7 @@
                 let infoDataTotal = localStorage.getItem('data')
                 this.infoData = JSON.parse(infoDataTotal)
                 this.pages = Math.ceil(this.infoData.length / 6);
+                this.infoDataLength = this.infoData.length
             }
 
         });

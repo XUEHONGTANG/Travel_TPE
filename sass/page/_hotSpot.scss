@@ -6,8 +6,32 @@
         position: absolute;
         z-index: 2;
         width: 100%;
-        .logo{
-            width: 6%;
+        @include m(){
+            justify-content: space-between;
+            align-items: center;
+            height: 80px;
+        }
+        .logoLink{
+            display: block;
+            text-decoration: none;
+            width: 120px;
+            @include m(){
+                width: 72px;
+            }
+            .logo{
+                width: 100%;
+                @include m(){
+                    margin-left: 24px;
+                }
+            }
+        }
+        .ham{
+            display: none;
+            @include m(){
+                display: block;
+                margin-right: 24px;
+                font-size: 24px;
+            }
         }
         .favoriteTotal{
             background-color: tomato;
@@ -16,36 +40,65 @@
             line-height: 24px;
             border-radius: 50%;
             position: absolute;
-            top: 24px;
+            top: 32px;
+            left: 1140px;
         }
         ul{
             display: flex;
             justify-content: center;
             align-items: center;
             margin-left: 64px;
+            @include m(){
+                flex-direction: column;
+                position: absolute;
+                top: 80px;
+                width: 100%;
+                margin: auto;
+                background-color: #666;
+                display: none;
+            }
             li{
                 width: 200px;
                 font-size: 20px;
                 text-align: center;
+                @include m(){
+                    height: 50px;
+                    width: 100%;
+                }
                 a{
+                    display: block;
                     text-decoration: none;
                     color: white;
                     font-weight: bold;
+                    @include m(){
+                        line-height: 50px;
+                    }
                 }
+            }
+        }
+        .ulShow{
+            @include m(){
+                display: flex;
             }
         }
     }
     .list_top_bg{
         background-image: url(../../images/pic1.png);
+        background-attachment: fixed;
         display: flex;
         height: 400px;
         background-size: cover;
-        background-position: 0 -20px;
         justify-content: center;
         align-items: center;
+        @include m(){
+            background-position: -320px 0;
+        }
         h1{
             font-size: 80px;
             color: white;
+            @include m(){
+                font-size: 32px;
+            }
         }
     }
     .title{
@@ -60,6 +113,9 @@
         font-size: 24px;
         text-align: center;
         margin-top: 16px;
+        @include m(){
+            margin-left: 24px;
+        }
         .chooseDetail{
             line-height: 50px;
             background-color: white;
@@ -91,6 +147,9 @@
     .list{
         width: 1200px;
         margin: 0 auto;
+        @include m(){
+            width: 398px;
+        }
         .detail{
             display: inline-block;
             width: 330px;
@@ -161,6 +220,9 @@
     .pages{
         display: flex;
         justify-content: center;
+        @include m(){
+            margin-bottom: 16px;
+        }
         li{
             width: 40px;
             font-size: 24px;
@@ -169,6 +231,10 @@
             cursor: pointer;
             line-height: 40px;
             color: #666;
+            @include m(){
+                font-size: 16px;
+                margin: 0;
+            }
         }
         .currentPage{
             background-color: rgb(50, 123, 171);
