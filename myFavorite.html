@@ -44,15 +44,16 @@
                 <button class="remove" @click="remove(val.id)">移除</button>
             </div>
         </div>
-            <ul class="pages">
-                <li class="previous">
-                    <i class="fa-solid fa-circle-chevron-left" @click="left()"></i>
-                </li>
-                <li v-for=" page in pages" @click="toPage(page)" :class="{currentPage:currentPage === (page)}">{{page}}</li>
-                <li class="next">
-                    <i class="fa-solid fa-circle-chevron-right" @click="right()"></i>
-                </li>
-            </ul>
+        <h1 v-show="hasData" class="noData">尚無資料</h1>
+        <ul class="pages" v-if="infoDataLength">
+            <li class="previous">
+                <i class="fa-solid fa-circle-chevron-left" @click="left()"></i>
+            </li>
+            <li v-for=" page in pages" @click="toPage(page)" :class="{currentPage:currentPage === (page)}">{{page}}</li>
+            <li class="next">
+                <i class="fa-solid fa-circle-chevron-right" @click="right()"></i>
+            </li>
+        </ul>
     </div>
 
 
@@ -70,12 +71,13 @@
                 tel: "",
                 intro: "",
                 isShow: false,
+                hasData: false,
                 dropDownMenu:{
                     ulShow: false
                 },
             },
             methods: {
-                edit(id, name, address, tel, intro){
+                edit(id, name, address, tel, intro){ //編輯資料
                     this.id = id;
                     this.name = name;
                     this.address = address;
@@ -83,16 +85,16 @@
                     this.intro = intro;
                     this.isShow = true;
                 },
-                save(){
-                    let telReg = /^(09)[0-9]{8}$/;
-                    if(this.name == "" || this.address == "" || this.tel == "" || this.intro == ""){
+                save(){ //儲存資料
+                    let telReg = /^(09)[0-9]{8}$/; //手機格式
+                    if(this.name == "" || this.address == "" || this.tel == "" || this.intro == ""){ //驗證資料都需要有值
                         alert("請輸入完整資訊!")
                     }else if(this.intro.length < 50){
                         alert("基本介紹不能小於50字")
-                    }else if(!telReg.test(this.tel)){
+                    }else if(!telReg.test(this.tel)){ //驗證手機格式
                         alert('請輸入正確的手機格式!')
                     }else{
-                        this.infoData.filter((item) => {
+                        this.infoData.filter((item) => { //確認 id 是否一致
                             if(this.id == item.id){
                                 item.name = this.name
                                 item.intro = this.intro
@@ -105,18 +107,24 @@
                         this.isShow = false;
                     }
                 },
-                remove(id){
+                remove(id){ //移除我的最愛
                     this.infoData = this.infoData.filter((item)=>{
                         return item.id != id
                     });
                     localStorage.setItem('data',JSON.stringify(this.infoData))
                     alert("已從最愛列表移除!")
                     
-                    let data = localStorage.getItem('data')
+                    let data = localStorage.getItem('data') //判斷 localStorage是否為空值，如果是就清空
                     if(typeof(data) == 'string'){
                         localStorage.removeItem('data')
                     }
-                    this.infoDataLength = this.infoData.length
+                    this.infoDataLength = this.infoData.length //更新我的最愛個數
+
+                    if(this.infoDataLength == 0 || this.infoDataLength == null){
+                        this.hasData = true
+                    }else{
+                        this.hasData = false
+                    }   
                 },
                 toPage(i){
                     // console.log(i);
@@ -144,14 +152,16 @@
             },
             computed: {
                 favoriteList(){
-                    return this.infoData.slice((this.currentPage - 1)*6, this.currentPage * 6)
+                    if(this.infoData != null){ //確認是否有資料
+                        return this.infoData.slice((this.currentPage - 1)*6, this.currentPage * 6)
+                    }
                 }
             },
             mounted(){
-                let infoDataTotal = localStorage.getItem('data')
+                let infoDataTotal = localStorage.getItem('data') //抓取資料
                 this.infoData = JSON.parse(infoDataTotal)
                 this.pages = Math.ceil(this.infoData.length / 6);
-                this.infoDataLength = this.infoData.length
+                this.infoDataLength = this.infoData.length //確保我的最愛個數資料
             }
 
         });
