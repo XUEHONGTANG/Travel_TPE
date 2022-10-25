@@ -38,16 +38,9 @@ function img_move(){
     return src(['images/*.*' , 'images/**/*.*']).pipe(dest('dist/images'))
 }
 
- //clear old file
- const clean = require('gulp-clean');
-
- function clear() {
-    return src('dist' ,{ read: false ,allowEmpty: true })
-    .pipe(clean({force: true}));
-    }
-
-    exports.cls = clear;
-
+function js_move(){
+    return src(['js/*.*' , 'js/**/*.*']).pipe(dest('dist/js'))
+}
 
  // 瀏覽器同步
 function browser(done) {
@@ -64,5 +57,5 @@ function browser(done) {
     done();
 }
 
-exports.default = series(parallel(includeHTML , sassstyle, img_move) ,browser)
+exports.default = series(parallel(includeHTML , sassstyle, img_move, js_move) ,browser)
 

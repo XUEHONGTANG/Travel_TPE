@@ -1,0 +1,10 @@
+<header>
+    <a class="logoLink" href="./index.html"><img class="logo" src="./images/logo.png" alt="logo"></a>
+    <div class="ham" @click="showUl"><i class="fa-solid fa-bars"></i></div>
+    <ul :class="dropDownMenu">
+        <li><a href="./index.html">遊憩景點</a></li>
+        <li><a href="./myFavorite.html">我的最愛</a><span class="favoriteTotal">{{infoDataLength}}</span></li>
+        <li><a href="#">活動資訊</a></li>
+        <li><a href="#">玩樂台北</a></li>
+    </ul>
+</header>
