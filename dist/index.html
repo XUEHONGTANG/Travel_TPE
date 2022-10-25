@@ -28,20 +28,20 @@
             <li class="chooseDetail" @click="show">請選擇分類
                 <i class="fa-solid fa-chevron-down" :class="changeAngle"></i>
                 <ol v-show="isShow">
-                    <li class="filterDetail" @click="allItem('全部列表')" >全部列表</li>
-                    <li class="filterDetail" v-for="i in filterCategory" @click="filterItem(i)">{{i}}</li>
+                    <li class="filterDetail" @click="findAll('全部列表')">全部列表</li>
+                    <li class="filterDetail" v-for="item in filterCategory" @click="filterItem(item)">{{item}}</li>
                 </ol>
             </li>
         </ul>
         <div class="list">
-            <div class="detail" v-for="(val, i) in updateList">
+            <div class="detail" v-for="(val, i) in filterList">
                     <img class="introPic" :src="val.images[0].src" alt="">
                 <h1 class="title">{{val.name}}</h1>
                 <p class="intro"><i class="fa-solid fa-location-dot"></i>{{val.address}}</p>
                 <p class="intro"><i class="fa-solid fa-phone"></i>{{val.tel}}</p>
                 <h1 class="introTitle">基本介紹</h1>
                 <p class="introDetail">{{val.introduction}}</p>
-                <button class="add" @click="add(val.images[0].src, val.name, val.address, val.tel, val.introduction)">加入最愛</button>
+                <button class="add" @click="add(val.id, val.images[0].src, val.name, val.address, val.tel, val.introduction)">加入最愛</button>
             </div>
         </div>
             <ul class="pages">
@@ -62,7 +62,6 @@
             data: {
                 list: null,
                 listType: null,
-                updateList: [],
                 pages: 0,
                 currentPage: 1,
                 isShow: false,
@@ -74,35 +73,40 @@
                 infoDataLength: null,
             },
             methods:{
-                add(pic, name, address, tel, intro){
+                findAll(all){
+                    this.pages = Math.ceil(this.list.data.length / 6);
+                    this.itemTitle = all;
+                },
+                add(id, pic, name, address, tel, intro){
                     // console.log(pic, name, address, tel, intro);
                     let infoData = {
+                        "id": id,
                         "pic": pic,
                         "name": name,
                         "address": address,
                         "tel": tel,
                         "intro": intro,
                     };
+
+                    
                     this.infoDataTotal.push(infoData)
-                    this.infoDataTotal = [...new Set(this.infoDataTotal.map(item => JSON.stringify(item)))].map(item => JSON.parse(item));
+                    this.infoDataTotal.forEach((element, i)=>{
+                        if(infoData.id != element.id)
+                        console.log(element);
+                    })
+                    
                     localStorage.setItem('data', JSON.stringify(this.infoDataTotal))
                     this.infoDataLength = this.infoDataTotal.length
                 },
-                allItem(all){
-                    this.updateList = this.list.data.slice((this.currentPage - 1)*6, this.currentPage * 6)
-                    this.pages = Math.ceil(this.list.data.length / 6);
-                    this.currentPage = 1;
-                    this.itemTitle = all;
-                },
                 filterItem(item){
                     // console.log(item);
-                    this.updateList = this.list.data.filter((items) => {
-                        return items.category[0].name === item
+                    this.listType = item;
+                    let newList = this.list.data.filter((list) => {
+                        return list.category[0].name === this.listType;
                     })
-                    this.pages = Math.ceil(this.updateList.length / 6);
+                    this.pages = Math.ceil(newList.length / 6);
                     this.currentPage = 1;
                     this.itemTitle = item;
-
                 },
                 show(){
                     if(this.isShow == false && this.changeAngle.up == false){
@@ -116,27 +120,34 @@
                 toPage(i){
                     // console.log(i);
                     this.currentPage = i;
-                    this.reloading();
                 },
                 left(){
                     this.currentPage--;
                     if(this.currentPage <= 0){
                         this.currentPage=1
                     };
-                    this.reloading();
                 },
                 right(){
                     this.currentPage++;
                     if(this.currentPage >= this.pages){
                         this.currentPage = this.pages
                     };
-                    this.reloading();
                 },
-                reloading(){
-                    this.updateList = this.list.data.slice((this.currentPage - 1)*6, this.currentPage * 6)
-                }
             },
             computed:{
+                filterList(){
+                    if(!this.listType){
+                        return this.list.data.slice((this.currentPage - 1)*6, this.currentPage * 6)
+                    }else if(this.itemTitle == "全部列表"){
+                        return this.list.data.slice((this.currentPage - 1)*6, this.currentPage * 6)
+                    }else{
+                        let newList = this.list.data.filter((list) => {
+                            return list.category[0].name === this.listType;
+                        })
+                        newList = newList.slice((this.currentPage - 1)*6, this.currentPage * 6)
+                        return newList;
+                    }
+                },
                 filterCategory(){
                     let updateCategory = [];
                     for(let i = 0; i < this.list.data.length; i++){
@@ -155,7 +166,6 @@
                 .then(resp => {
                     this.list = resp
                     this.pages = Math.ceil(this.list.data.length / 6);
-                    this.updateList = this.list.data.slice((this.currentPage - 1)*6, this.currentPage * 6)
                 })
             }
         });

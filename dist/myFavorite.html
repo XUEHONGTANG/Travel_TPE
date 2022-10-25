@@ -23,14 +23,24 @@
         <div class="list_top_bg">
             <h1>我的最愛</h1>
         </div>
-        <h1 class="title">{{itemTitle}}</h1>
+        <div class="editPlace" v-show="isShow">
+            <h1 class="title">編輯資料</h1>
+            <label>名稱<br><input v-model="name"></input></label>
+            <label>地址<br><input v-model="address"></input></label>
+            <label>電話<br><input v-model="tel"></input></label>
+            <label>基本介紹<br><textarea v-model="intro"></input></textarea></label>
+            <button class="add" @click="save()">儲存</button>
+        </div>
         <div class="list">
-            <div class="detail" v-for="(val, i) in updateList">
-                    <img class="introPic" :src="val.images[0].src" alt="">
+            <div class="detail" v-for="(val, i) in favoriteList">
+                <img class="introPic" :src="val.pic" alt="">
                 <h1 class="title">{{val.name}}</h1>
                 <p class="intro"><i class="fa-solid fa-location-dot"></i>{{val.address}}</p>
                 <p class="intro"><i class="fa-solid fa-phone"></i>{{val.tel}}</p>
-                <button class="add">編輯</button>
+                <h1 class="introTitle">基本介紹</h1>
+                <p class="introDetail">{{val.intro}}</p>
+                <button class="add" @click="edit(val.id, val.name, val.address, val.tel, val.intro)">編輯</button>
+                <button class="remove" @click="remove(val.id)">移除</button>
             </div>
         </div>
             <ul class="pages">
@@ -51,11 +61,63 @@
             data: {
                 infoData:[],
                 infoDataLength: null,
+                pages: 0,
+                currentPage: 1,
+                id: null,
+                name: null,
+                address: null,
+                tel: "",
+                intro: "",
+                isShow: false,
+            },
+            methods: {
+                edit(id, name, address, tel, intro){
+                    this.id = id;
+                    this.name = name;
+                    this.address = address;
+                    this.tel = tel;
+                    this.intro = intro;
+                    this.isShow = true;
+                },
+                save(){
+                    let telReg = /^(09)[0-9]{8}$/;
+                    if(this.name == "" || this.address == "" || this.tel == "" || this.intro == ""){
+                        alert("請輸入完整資訊!")
+                    }else if(this.intro.length < 50){
+                        alert("基本介紹不能小於50字")
+                    }else if(!telReg.test(this.tel)){
+                        alert('請輸入正確的手機格式!')
+                    }else{
+                        this.infoData.filter((item) => {
+                            if(this.id == item.id){
+                                item.name = this.name
+                                item.intro = this.intro
+                                item.address = this.address
+                                item.tel = this.tel
+                                return this.infoData
+                            }
+                        });
+                        localStorage.setItem('data',JSON.stringify(this.infoData))
+                        this.isShow = false;
+                    }
+                },
+                remove(id){
+                    this.infoData = this.infoData.filter((item)=>{
+                        return item.id != id
+                    });
+                    localStorage.setItem('data',JSON.stringify(this.infoData))
+                    alert("已從最愛列表移除!")
+                }
+            },
+            computed: {
+                favoriteList(){
+                    return this.infoData.slice((this.currentPage - 1)*6, this.currentPage * 6)
+                }
             },
             mounted(){
                 let infoDataTotal = localStorage.getItem('data')
                 this.infoData = JSON.parse(infoDataTotal)
-
+                this.pages = Math.ceil(this.infoData.length / 6);
             }
 
         });
