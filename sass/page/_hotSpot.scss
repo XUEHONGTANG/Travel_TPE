@@ -117,7 +117,7 @@
         text-align: center;
         margin-top: 16px;
         @include m(){
-            margin-left: 24px;
+            margin-left: 40px;
             width: 150px;
         }
         .chooseDetail{
@@ -173,22 +173,22 @@
             padding: 16px;
             background-color: white;
             box-shadow: 0 0 3px;
-
+            @include m(){
+                margin-left: 32px;
+                width: 300px;
+            }
             .introPic{
-                width: 330px;
-                text-align: center;
+                width: 100%;
             }
 
             .title{
                 font-size: 24px;
-                width: 350px;
                 text-align: center;
                 font-weight: bold;
                 margin-top: 16px;
             }
 
             .intro{
-                width: 345px;
                 margin-top: 8px;
             }
 
@@ -208,12 +208,8 @@
             }
 
             .introDetail{
-                width: 350px;
                 height: 120px;
                 overflow-y: scroll;
-                @include m(){
-                    width: 340px;
-                }
             }
 
             .add{
