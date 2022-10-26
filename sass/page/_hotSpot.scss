@@ -105,6 +105,9 @@
         text-align: center;
         font-size: 32px;
         margin: 24px 0;
+        @include m(){
+            font-size: 24px;
+        }
     }
 
     .filter{
@@ -115,6 +118,7 @@
         margin-top: 16px;
         @include m(){
             margin-left: 24px;
+            width: 150px;
         }
         .chooseDetail{
             line-height: 50px;
@@ -122,6 +126,9 @@
             cursor: pointer;
             box-shadow: 0 0 3px;
             border-radius: 10px 10px 0 0;
+            @include m(){
+                font-size: 16px;
+            }
             .fa-chevron-down{
                 margin-left: 8px;
             }
@@ -131,11 +138,18 @@
             ol{
                 width: 200px;
                 position: absolute;
+                @include m(){
+                    width: 150px;
+                }
                 .filterDetail{
                     line-height: 50px;
                     background-color: white;
                     cursor: pointer;
                     box-shadow: 0 0 3px;
+                    @include m(){
+                        font-size: 16px;
+                        width: 150px;
+                    }
                     &:last-child{
                         border-radius: 0 0 10px 10px;
                     }
@@ -197,6 +211,9 @@
                 width: 350px;
                 height: 120px;
                 overflow-y: scroll;
+                @include m(){
+                    width: 340px;
+                }
             }
 
             .add{
