@@ -3,18 +3,12 @@
 
 @import "mixin/mixin";
 
-//header
-@import "layout/header";
-
-//footer
-@import "layout/footer.scss";
-
 //page
 @import "page/hotSpot.scss";
 @import "page/myFavorite.scss";
 
 body {
-    font-family: "Noto Sans TC";
+    font-family: "微軟正黑體";
     background-image: url("../images/ricepaper.jpg");
     line-height: 1.6;
 }
