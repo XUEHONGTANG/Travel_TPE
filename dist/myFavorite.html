@@ -40,8 +40,10 @@
                 <p class="intro"><i class="fa-solid fa-phone"></i>{{val.tel}}</p>
                 <h1 class="introTitle">基本介紹</h1>
                 <p class="introDetail">{{val.intro}}</p>
-                <button class="add" @click="edit(val.id, val.name, val.address, val.tel, val.intro)">編輯</button>
-                <button class="remove" @click="remove(val.id)">移除</button>
+                <div class="btnWrapper">
+                    <button class="edit" @click="edit(val.id, val.name, val.address, val.tel, val.intro)">編輯</button>
+                    <button class="remove" @click="remove(val.id)">移除</button>
+                </div>
             </div>
         </div>
         <h1 v-show="hasData" class="noData">尚無資料</h1>
