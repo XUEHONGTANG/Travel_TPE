@@ -42,6 +42,11 @@
             position: absolute;
             top: 32px;
             left: 1140px;
+            @include m(){
+                height: 24px;
+                left: 240px;
+                top: 40px;
+            }
         }
         ul{
             display: flex;
